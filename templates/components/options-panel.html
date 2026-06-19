@@ -21,7 +21,8 @@
                                 :class="{ 
                                     'bg-darkInput border-darkBorder text-darkTextPrimary hover:bg-darkInputHover hover:border-darkAccent focus:bg-darkInputFocus focus:border-darkAccent focus:ring-1 focus:ring-darkAccent': darkMode,
                                     'bg-white border-gray-300 hover:border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500': !darkMode 
-                                }">
+                                }"
+                                title="选择输出格式">
                             <optgroup label="图片格式" :class="{ 'text-darkTextPrimary bg-darkInput': darkMode }">
                                 <option value="jpeg">JPEG - 适合照片</option>
                                 <option value="png">PNG - 适合图形</option>
@@ -36,7 +37,7 @@
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2"
                              :class="{ 'text-darkTextSecondary': darkMode, 'text-gray-500': !darkMode }">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="h-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
@@ -67,7 +68,7 @@
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2"
                              :class="{ 'text-darkTextSecondary': darkMode, 'text-gray-500': !darkMode }">
-                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="h-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                             </svg>
                         </div>
@@ -125,7 +126,7 @@
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2"
                          :class="{ 'text-darkTextSecondary': darkMode, 'text-gray-500': !darkMode }">
-                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="h-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </div>
