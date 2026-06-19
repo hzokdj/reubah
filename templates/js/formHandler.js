@@ -13,19 +13,19 @@ document.addEventListener("DOMContentLoaded", function () {
     optimize: document.getElementById("optimize")
   };
 
-  // Validate required elements
+  // 验证必需的表单元素
   if (!elements.form || !elements.form.querySelector('input[type="file"]')) {
-    console.error("Required form elements not found");
+    console.error("未找到表单所需元素");
     return;
   }
 
   const fileInput = elements.form.querySelector('input[type="file"]');
   const MAX_FILE_SIZE = 32 * 1024 * 1024; // 32MB
 
-  // Setup quick actions
+  // 设置快速操作
   setupQuickActions();
   
-  // Setup background removal toggle
+  // 设置背景移除切换
   if (elements.removeBackground) {
     elements.removeBackground.addEventListener("change", () => {
       if (elements.bgRemovalOptions) {
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Handle form submission
+  // 处理表单提交
   elements.form.addEventListener("submit", handleFormSubmit);
 
   function setupQuickActions() {
@@ -77,20 +77,20 @@ document.addEventListener("DOMContentLoaded", function () {
     try {
       await processImage(formData);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("错误：", error);
       showError(error.message);
     }
   }
 
   function validateFile() {
     if (!fileInput.files || !fileInput.files.length) {
-        showError("Please select an image file first");
+        showError("请先选择一张图片");
         return false;
     }
 
     const file = fileInput.files[0];
     if (file.size > MAX_FILE_SIZE) {
-        showError("File size exceeds 32MB limit");
+        showError("文件大小超过32MB限制");
         return false;
     }
 
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const isHeic = isHeicFile(file);
     
     if (!isImage && !isHeic) {
-        showError("Please select a valid image file");
+        showError("请选择有效的图片文件");
         return false;
     }
 
@@ -114,16 +114,16 @@ function createFormData() {
   const formData = new FormData();
   const file = fileInput.files[0];
   
-  // Create a new Blob with the correct MIME type for HEIC files
+  // 为 HEIC 文件创建具有正确 MIME 类型的 Blob
   if (isHeicFile(file)) {
     const heicBlob = new Blob([file], { type: 'image/heic' });
     formData.append("image", heicBlob, file.name);
     formData.append("sourceFormat", "heic");
     
-    // Always convert HEIC to a different format
+    // 始终将 HEIC 转换为其他格式
     const outputFormat = elements.formatSelect?.value;
     if (!outputFormat || outputFormat === "heic") {
-      formData.append("format", "jpeg"); // Default to JPEG
+      formData.append("format", "jpeg"); // 默认为 JPEG
     } else {
       formData.append("format", outputFormat);
     }
@@ -132,7 +132,7 @@ function createFormData() {
     formData.append("format", elements.formatSelect?.value || "jpeg");
   }
   
-  // Add other options
+  // 添加其他选项
   if (elements.qualitySelect?.value) {
     formData.append("quality", elements.qualitySelect.value);
   }
@@ -152,7 +152,7 @@ function createFormData() {
     formData.append("optimize", "true");
   }
 
-  // Log form data for debugging
+  // 记录表单数据用于调试
   for (let pair of formData.entries()) {
     console.log(pair[0] + ': ' + pair[1]);
   }
@@ -166,7 +166,7 @@ function createFormData() {
     if (submitButton) submitButton.disabled = true;
 
     try {
-        // Log the FormData contents for debugging
+        // 记录 FormData 内容用于调试
         for (let pair of formData.entries()) {
             console.log(pair[0] + ': ' + pair[1]);
         }
@@ -177,15 +177,15 @@ function createFormData() {
         });
 
         if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: "Unknown error occurred" }));
-            console.error("Server response:", errorData);
-            throw new Error(errorData.error?.message || errorData.message || "Processing failed");
+            const errorData = await response.json().catch(() => ({ message: "发生未知错误" }));
+            console.error("服务器响应：", errorData);
+            throw new Error(errorData.error?.message || errorData.message || "处理失败");
         }
 
         await handleSuccess(response, elements.formatSelect?.value || "jpeg");
     } catch (error) {
-        console.error("Processing error:", error);
-        showError(error.message || "Failed to process image");
+        console.error("处理错误：", error);
+        showError(error.message || "图片处理失败");
     } finally {
         hideProgress();
         if (submitButton) submitButton.disabled = false;
@@ -228,7 +228,7 @@ function createFormData() {
 
   async function handleSuccess(response, format) {
     if (!elements.result) {
-      console.error("Result element not found");
+      console.error("未找到结果元素");
       return;
     }
 
@@ -239,14 +239,14 @@ function createFormData() {
     const resultInfo = elements.result.querySelector(".result-info");
 
     if (resultPreview && resultInfo) {
-      resultPreview.innerHTML = `<img src="${url}" alt="Processed image" class="max-w-full rounded-lg">`;
+      resultPreview.innerHTML = `<img src="${url}" alt="处理后的图片" class="max-w-full rounded-lg">`;
       resultInfo.innerHTML = `
         <div class="flex justify-between items-center">
-          <p class="text-sm text-gray-600">Size: ${(blob.size / 1024).toFixed(2)} KB</p>
+          <p class="text-sm text-gray-600">大小：${(blob.size / 1024).toFixed(2)} KB</p>
           <a href="${url}" 
-             download="processed.${format}" 
+             download="已处理.${format}" 
              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            Download Image
+            下载图片
           </a>
         </div>
       `;
