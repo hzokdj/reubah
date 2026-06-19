@@ -23,10 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function setupEventListeners() {
-        // 文件选择变化监听
         elements.documentInput.addEventListener("change", handleFileSelect);
 
-        // 拖拽事件监听
         elements.documentUploadArea.addEventListener("dragover", (e) => {
             e.preventDefault();
             elements.documentUploadArea.classList.add("border-indigo-500");
@@ -46,7 +44,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // 转换按钮点击事件
         elements.convertBtn.addEventListener("click", convertDocument);
     }
 
