@@ -13,19 +13,16 @@ document.addEventListener("DOMContentLoaded", function () {
     optimize: document.getElementById("optimize")
   };
 
-  // 验证必需的表单元素
   if (!elements.form || !elements.form.querySelector('input[type="file"]')) {
     console.error("未找到表单所需元素");
     return;
   }
 
   const fileInput = elements.form.querySelector('input[type="file"]');
-  const MAX_FILE_SIZE = 32 * 1024 * 1024; // 32MB
+  const MAX_FILE_SIZE = 32 * 1024 * 1024;
 
-  // 设置快速操作
   setupQuickActions();
-  
-  // 设置背景移除切换
+
   if (elements.removeBackground) {
     elements.removeBackground.addEventListener("change", () => {
       if (elements.bgRemovalOptions) {
@@ -34,7 +31,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 处理表单提交
   elements.form.addEventListener("submit", handleFormSubmit);
 
   function setupQuickActions() {
@@ -45,9 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
         elements.widthInput.value = "";
         elements.heightInput.value = "";
       },
-      resize: () => {
-        elements.widthInput.focus();
-      },
+      resize: () => elements.widthInput.focus(),
       adjust: () => {
         elements.formatSelect.value = "png";
         elements.qualitySelect.value = "lossless";
@@ -69,11 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function handleFormSubmit(e) {
     e.preventDefault();
-
     if (!validateFile()) return;
 
     const formData = createFormData();
-    
+
     try {
       await processImage(formData);
     } catch (error) {
@@ -84,81 +77,74 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function validateFile() {
     if (!fileInput.files || !fileInput.files.length) {
-        showError("请先选择一张图片");
-        return false;
+      showError("请先上传文件");
+      return false;
     }
 
     const file = fileInput.files[0];
     if (file.size > MAX_FILE_SIZE) {
-        showError("文件大小超过32MB限制");
-        return false;
+      showError("文件大小超出限制");
+      return false;
     }
 
     const isImage = file.type.startsWith('image/');
     const isHeic = isHeicFile(file);
-    
+
     if (!isImage && !isHeic) {
-        showError("请选择有效的图片文件");
-        return false;
+      showError("无效的文件格式");
+      return false;
     }
 
     return true;
-}
+  }
 
-function isHeicFile(file) {
-  const ext = file.name.split('.').pop().toLowerCase();
-  return ext === 'heic' || ext === 'heif' || file.type === 'image/heic' || file.type === 'image/heif';
-}
+  function isHeicFile(file) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    return ext === 'heic' || ext === 'heif' ||
+           file.type === 'image/heic' || file.type === 'image/heif';
+  }
 
-function createFormData() {
-  const formData = new FormData();
-  const file = fileInput.files[0];
-  
-  // 为 HEIC 文件创建具有正确 MIME 类型的 Blob
-  if (isHeicFile(file)) {
-    const heicBlob = new Blob([file], { type: 'image/heic' });
-    formData.append("image", heicBlob, file.name);
-    formData.append("sourceFormat", "heic");
-    
-    // 始终将 HEIC 转换为其他格式
-    const outputFormat = elements.formatSelect?.value;
-    if (!outputFormat || outputFormat === "heic") {
-      formData.append("format", "jpeg"); // 默认为 JPEG
+  function createFormData() {
+    const formData = new FormData();
+    const file = fileInput.files[0];
+
+    if (isHeicFile(file)) {
+      const heicBlob = new Blob([file], { type: 'image/heic' });
+      formData.append("image", heicBlob, file.name);
+      formData.append("sourceFormat", "heic");
+
+      const outputFormat = elements.formatSelect?.value;
+      if (!outputFormat || outputFormat === "heic") {
+        formData.append("format", "jpeg");
+      } else {
+        formData.append("format", outputFormat);
+      }
     } else {
-      formData.append("format", outputFormat);
+      formData.append("image", file);
+      formData.append("format", elements.formatSelect?.value || "jpeg");
     }
-  } else {
-    formData.append("image", file);
-    formData.append("format", elements.formatSelect?.value || "jpeg");
-  }
-  
-  // 添加其他选项
-  if (elements.qualitySelect?.value) {
-    formData.append("quality", elements.qualitySelect.value);
-  }
-  if (elements.widthInput?.value) {
-    formData.append("width", elements.widthInput.value);
-  }
-  if (elements.heightInput?.value) {
-    formData.append("height", elements.heightInput.value);
-  }
-  if (elements.resizeModeSelect) {
-    formData.append("resizeMode", elements.resizeModeSelect.value || "fit");
-  }
-  if (elements.removeBackground?.checked) {
-    formData.append("removeBackground", "true");
-  }
-  if (elements.optimize?.checked) {
-    formData.append("optimize", "true");
-  }
 
-  // 记录表单数据用于调试
-  for (let pair of formData.entries()) {
-    console.log(pair[0] + ': ' + pair[1]);
-  }
+    if (elements.qualitySelect?.value) {
+      formData.append("quality", elements.qualitySelect.value);
+    }
+    if (elements.widthInput?.value) {
+      formData.append("width", elements.widthInput.value);
+    }
+    if (elements.heightInput?.value) {
+      formData.append("height", elements.heightInput.value);
+    }
+    if (elements.resizeModeSelect) {
+      formData.append("resizeMode", elements.resizeModeSelect.value || "fit");
+    }
+    if (elements.removeBackground?.checked) {
+      formData.append("removeBackground", "true");
+    }
+    if (elements.optimize?.checked) {
+      formData.append("optimize", "true");
+    }
 
-  return formData;
-}
+    return formData;
+  }
 
   async function processImage(formData) {
     showProgress();
@@ -166,35 +152,31 @@ function createFormData() {
     if (submitButton) submitButton.disabled = true;
 
     try {
-        // 记录 FormData 内容用于调试
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
+      const response = await fetch("/process", {
+        method: "POST",
+        body: formData
+      });
 
-        const response = await fetch("/process", {
-            method: "POST",
-            body: formData
-        });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: "发生未知错误" }));
+        throw new Error(errorData.error?.message || errorData.message || "处理失败");
+      }
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: "发生未知错误" }));
-            console.error("服务器响应：", errorData);
-            throw new Error(errorData.error?.message || errorData.message || "处理失败");
-        }
-
-        await handleSuccess(response, elements.formatSelect?.value || "jpeg");
+      await handleSuccess(response, elements.formatSelect?.value || "jpeg");
     } catch (error) {
-        console.error("处理错误：", error);
-        showError(error.message || "图片处理失败");
+      console.error("处理错误：", error);
+      showError(error.message || "图片处理失败");
     } finally {
-        hideProgress();
-        if (submitButton) submitButton.disabled = false;
+      hideProgress();
+      if (submitButton) submitButton.disabled = false;
     }
-}
+  }
 
   function showProgress() {
     if (elements.progress) {
       elements.progress.style.display = "block";
+      const text = elements.progress.querySelector(".text-sm");
+      if (text) text.textContent = "处理中…";
     }
     if (elements.result) {
       elements.result.style.display = "none";
@@ -208,29 +190,32 @@ function createFormData() {
   }
 
   function showError(message) {
+    const map = {
+      "No file uploaded": "未上传文件",
+      "File Too Large": "文件过大",
+      "Invalid File Format": "无效的文件格式",
+      "Timeout": "超时",
+      "Failed": "失败",
+      "Error": "错误"
+    };
+
+    const msg = map[message] || message;
+
     const errorDiv = document.createElement("div");
     errorDiv.className = "bg-red-50 border-l-4 border-red-400 p-4 mb-4";
     errorDiv.innerHTML = `
       <div class="flex">
-        <div class="flex-shrink-0">
-          <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-          </svg>
-        </div>
         <div class="ml-3">
-          <p class="text-sm text-red-700">${message}</p>
+          <p class="text-sm text-red-700">${msg}</p>
         </div>
       </div>
     `;
-    elements.form.insertBefore(errorDiv, elements.form.firstChild);
+    elements.form.prepend(errorDiv);
     setTimeout(() => errorDiv.remove(), 5000);
   }
 
   async function handleSuccess(response, format) {
-    if (!elements.result) {
-      console.error("未找到结果元素");
-      return;
-    }
+    if (!elements.result) return;
 
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);
@@ -245,7 +230,7 @@ function createFormData() {
           <p class="text-sm text-gray-600">大小：${(blob.size / 1024).toFixed(2)} KB</p>
           <a href="${url}" 
              download="已处理.${format}" 
-             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
             下载图片
           </a>
         </div>
@@ -257,16 +242,14 @@ function createFormData() {
 
   function updateQuickActionStyles(button) {
     document.querySelectorAll("[data-action]").forEach((btn) => {
-      btn.classList.remove(
-        "bg-indigo-50",
-        "border-indigo-500",
-        "text-indigo-700"
-      );
+      btn.classList.remove("bg-indigo-50", "border-indigo-500", "text-indigo-700");
     });
-    button.classList.add(
-      "bg-indigo-50",
-      "border-indigo-500",
-      "text-indigo-700"
-    );
+    button.classList.add("bg-indigo-50", "border-indigo-500", "text-indigo-700");
+  }
+
+  function isHeicFile(file) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    return ext === 'heic' || ext === 'heif' ||
+           file.type === 'image/heic' || file.type === 'image/heif';
   }
 });
