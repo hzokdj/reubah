@@ -24,16 +24,16 @@
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                 </svg>
-                                Choose a file
+                                选择文件
                             </span>
                         </label>
                         <p :class="{ 'text-darkTextSecondary': darkMode, 'text-gray-500': !darkMode }">
-                            or drag and drop your image here
+                            或将图片拖放到此处
                         </p>
                     </div>
                     <div class="text-xs mt-2"
                          :class="{ 'text-darkTextSecondary': darkMode, 'text-gray-500': !darkMode }">
-                        <p>Maximum file size: 32MB</p>
+                        <p>最大文件大小：32MB</p>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
     <div id="preview" class="hidden">
         <div class="relative p-4 rounded-lg border"
              :class="{ 'bg-darkSurface border-darkBorder': darkMode, 'bg-gray-50 border-gray-200': !darkMode }">
-            <img class="max-h-64 mx-auto rounded-lg shadow-md" alt="Preview">
+            <img class="max-h-64 mx-auto rounded-lg shadow-md" alt="预览">
             <div class="absolute top-2 right-2 px-3 py-1 rounded-full text-sm font-medium"
                  :class="{ 'bg-black/50 text-darkTextPrimary': darkMode, 'bg-gray-900/50 text-gray-100': !darkMode }">
             </div>
@@ -60,7 +60,7 @@
                     class="absolute top-2 left-2 p-2 rounded-full text-sm transition-colors cursor-pointer text-white"
                     :class="{ 'bg-error-dark/80 hover:bg-error-dark': darkMode, 'bg-error-light/80 hover:bg-error-light': !darkMode }"
                     id="removePreview" 
-                    aria-label="Remove image">
+                    aria-label="移除图片">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
