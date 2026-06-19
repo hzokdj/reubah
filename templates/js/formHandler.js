@@ -246,10 +246,4 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     button.classList.add("bg-indigo-50", "border-indigo-500", "text-indigo-700");
   }
-
-  function isHeicFile(file) {
-    const ext = file.name.split('.').pop().toLowerCase();
-    return ext === 'heic' || ext === 'heif' ||
-           file.type === 'image/heic' || file.type === 'image/heif';
-  }
 });
