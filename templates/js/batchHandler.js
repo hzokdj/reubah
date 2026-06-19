@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function initializeBatchUpload() {
         if (!elements.batchUploadArea || !elements.batchImageInput) {
-            console.error("Required batch upload elements not found");
+            console.error("未找到批量上传所需的 DOM 元素");
             return;
         }
 
@@ -24,10 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function setupBatchEventListeners() {
-        // File input change handler
+        // 文件选择变化监听
         elements.batchImageInput.addEventListener("change", handleFileSelect);
 
-        // Drag and drop handlers
+        // 拖拽事件监听
         elements.batchUploadArea.addEventListener("dragover", (e) => {
             e.preventDefault();
             elements.batchUploadArea.classList.add("border-indigo-500");
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Process button handler
+        // 处理按钮点击事件
         elements.batchProcessBtn.addEventListener("click", processBatch);
     }
 
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
         
         if (files.length === 0) {
-            alert("Please select valid image files");
+            alert("请选择有效的图片文件");
             return;
         }
     
@@ -136,10 +136,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return {
             mode: 'individual',
             format: document.getElementById('batchFormatSelect')?.value || 'jpeg',
-            // quality: document.getElementById('batchQualitySelect')?.value || 'medium',
             width: document.getElementById('batchWidthInput')?.value || '',
             height: document.getElementById('batchHeightInput')?.value || '',
-            // optimize: document.getElementById('batchOptimize')?.checked || false
         };
     }
 
@@ -153,7 +151,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const formData = new FormData();
                 formData.append("image", file);
                 
-                // Add processing options
                 for (const [key, value] of Object.entries(options)) {
                     formData.append(key, value);
                 }
@@ -162,20 +159,20 @@ document.addEventListener("DOMContentLoaded", function () {
                     await processFile(formData);
                     processed++;
                 } catch (error) {
-                    errors.push(`Failed to process ${file.name}: ${error.message}`);
+                    errors.push(`处理 ${file.name} 失败：${error.message}`);
                 }
                 
                 updateProgress(processed, total);
             }
 
             if (errors.length > 0) {
-                alert(`Batch processing completed with ${errors.length} errors:\n${errors.join('\n')}`);
+                alert(`批量处理完成，但有 ${errors.length} 个错误：\n${errors.join('\n')}`);
             } else {
-                alert("Batch processing completed successfully!");
+                alert("批量处理成功完成！");
             }
         } catch (error) {
-            console.error("Batch processing error:", error);
-            alert("An error occurred during batch processing");
+            console.error("批量处理错误：", error);
+            alert("批量处理过程中发生错误");
         }
     }
 
@@ -185,7 +182,6 @@ document.addEventListener("DOMContentLoaded", function () {
             formData.append(`images`, file);
         });
         
-        // Add PDF options
         formData.append('mode', 'merge-pdf');
         formData.append('pageSize', options.pageSize);
         formData.append('orientation', options.orientation);
@@ -198,14 +194,14 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             if (!response.ok) {
-                throw new Error('PDF creation failed');
+                throw new Error('PDF 创建失败');
             }
 
             const blob = await response.blob();
-            downloadFile(blob, `merged_${Date.now()}.pdf`);
+            downloadFile(blob, `合并_${Date.now()}.pdf`);
         } catch (error) {
-            console.error('Error creating PDF:', error);
-            alert('Failed to create PDF: ' + error.message);
+            console.error('创建 PDF 时出错：', error);
+            alert('创建 PDF 失败：' + error.message);
         }
     }
 
@@ -218,28 +214,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!response.ok) {
                 const error = await response.json();
-                throw new Error(error.message || "Processing failed");
+                throw new Error(error.message || "处理失败");
             }
 
             const blob = await response.blob();
             const originalName = formData.get("image").name;
             const format = formData.get("format") || "jpeg";
             
-            // Get the original file extension
             const originalExt = originalName.split('.').pop();
-            
-            // Create the new filename
             const baseName = originalName.replace(`.${originalExt}`, '');
-            let filename = `processed_${baseName}.${format}`;
+            let filename = `已处理_${baseName}.${format}`;
             
-            // Set the correct content type based on the format
             const contentType = getContentType(format);
             const processedBlob = new Blob([blob], { type: contentType });
             
             downloadFile(processedBlob, filename);
             return true;
         } catch (error) {
-            console.error(`Error processing file: ${error.message}`);
+            console.error(`处理文件时出错：${error.message}`);
             throw error;
         }
     }
@@ -273,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateProgress(processed, total) {
         const percentage = (processed / total) * 100;
         elements.batchProgressBar.style.width = `${percentage}%`;
-        elements.batchProgressCount.textContent = `${processed}/${total} files`;
+        elements.batchProgressCount.textContent = `${processed}/${total} 个文件`;
     }
 
     function resetBatchUpload() {
@@ -282,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
         elements.batchFileList.classList.add("hidden");
         elements.batchProgress.classList.add("hidden");
         elements.batchProgressBar.style.width = "0%";
-        elements.batchProgressCount.textContent = "0/0 files";
+        elements.batchProgressCount.textContent = "0/0 个文件";
         elements.batchProcessBtn.disabled = true;
     }
 
