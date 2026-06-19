@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         (${(file.size / (1024 * 1024)).toFixed(2)} MB)
                     </span>
                 </div>
-                <button onclick="removeFile(${index})" 
+                <button onclick="removeFile(${index})" title="删除该文件"
                         class="transition-colors hover:text-red-700"
                         :class="{ 'text-red-400': darkMode, 'text-red-500': !darkMode }">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
