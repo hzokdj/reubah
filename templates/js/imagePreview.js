@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function initializeImagePreview() {
     if (!elements.imageInput || !elements.uploadArea) {
-      console.error("Required preview elements not found");
+      console.error("未找到预览所需元素");
       return;
     }
 
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   file.name.toLowerCase().endsWith('.heif');
     
     if (!isImage && !isHeic) {
-        alert("Please select an image file");
+        alert("请选择图片文件");
         return;
     }
 
@@ -100,13 +100,13 @@ document.addEventListener("DOMContentLoaded", function () {
         
         if (isHeicFile(file)) {
             img.src = '/static/images/heic-placeholder.svg';
-            img.alt = 'HEIC image placeholder';
+            img.alt = 'HEIC 图片占位符';
             elements.uploadArea.classList.add("border-green-500");
             if (elements.uploadText) {
-                elements.uploadText.innerHTML = '<span class="text-green-500">HEIC file ready for processing</span>';
+                elements.uploadText.innerHTML = '<span class="text-green-500">HEIC 文件已准备处理</span>';
             }
             
-            // Force output format to something other than HEIC
+            // 强制将输出格式设置为非 HEIC
             if (elements.formatSelect) {
                 if (elements.formatSelect.value === "heic") {
                     elements.formatSelect.value = "jpeg";
@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         } else {
             img.src = e.target.result;
-            img.alt = 'Image preview';
+            img.alt = '图片预览';
             img.onload = () => updateImageInfo(img);
         }
 
@@ -134,26 +134,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     elements.uploadArea.classList.add("border-green-500");
     if (elements.uploadText) {
-      elements.uploadText.innerHTML = '<span class="text-green-500">File ready for processing</span>';
+      elements.uploadText.innerHTML = '<span class="text-green-500">文件已准备处理</span>';
     }
 
-    // Update dimension inputs with placeholders
+    // 更新尺寸输入框的占位符
     if (elements.widthInput) elements.widthInput.placeholder = img.naturalWidth;
     if (elements.heightInput) elements.heightInput.placeholder = img.naturalHeight;
   }
 
   function resetForm() {
-    // Reset file input value
+    // 重置文件输入值
     elements.imageInput.value = "";
     
-    // Hide preview and status
+    // 隐藏预览和状态
     elements.previewDiv.classList.add("hidden");
     elements.fileStatus.classList.add("hidden");
     
-    // Reset upload area styling
+    // 重置上传区域样式
     elements.uploadArea.classList.remove("border-green-500");
     
-    // Reset upload text without replacing the input element
+    // 重置上传文本，不替换输入元素
     if (elements.uploadText) {
         elements.uploadText.innerHTML = `
             <label for="imageInput" class="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
@@ -161,18 +161,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    Choose a file
+                    选择文件
                 </span>
             </label>
-            <p class="text-gray-500">or drag and drop your image here</p>
+            <p class="text-gray-500">或将图片拖放到此处</p>
         `;
     }
 
-    // Reset dimension input placeholders
-    if (elements.widthInput) elements.widthInput.placeholder = "Width (px)";
-    if (elements.heightInput) elements.heightInput.placeholder = "Height (px)";
+    // 重置尺寸输入框的占位符
+    if (elements.widthInput) elements.widthInput.placeholder = "宽度（像素）";
+    if (elements.heightInput) elements.heightInput.placeholder = "高度（像素）";
     
-    // Re-initialize event listeners
+    // 重新初始化事件监听器
     setupEventListeners();
   }
 
