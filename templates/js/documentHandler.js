@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function initializeDocumentConversion() {
         if (!elements.documentUploadArea || !elements.documentInput) {
-            console.error("Required document conversion elements not found");
+            console.error("未找到文档转换所需的 DOM 元素");
             return;
         }
 
@@ -23,10 +23,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function setupEventListeners() {
-        // File input change handler
+        // 文件选择变化监听
         elements.documentInput.addEventListener("change", handleFileSelect);
 
-        // Drag and drop handlers
+        // 拖拽事件监听
         elements.documentUploadArea.addEventListener("dragover", (e) => {
             e.preventDefault();
             elements.documentUploadArea.classList.add("border-indigo-500");
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Convert button handler
+        // 转换按钮点击事件
         elements.convertBtn.addEventListener("click", convertDocument);
     }
 
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const supportedFormats = ['pdf', 'doc', 'docx', 'odt', 'rtf', 'txt'];
         
         if (!supportedFormats.includes(ext)) {
-            alert("Please select a supported document format");
+            alert("请选择支持的文档格式");
             return;
         }
 
@@ -98,8 +98,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error("Server error:", errorData);
-                throw new Error(errorData.error?.message || errorData.message || "Conversion failed");
+                console.error("服务器错误：", errorData);
+                throw new Error(errorData.error?.message || errorData.message || "转换失败");
             }
 
             const blob = await response.blob();
@@ -107,8 +107,8 @@ document.addEventListener("DOMContentLoaded", function () {
             downloadFile(blob, filename);
             
         } catch (error) {
-            console.error("Conversion error:", error);
-            alert("Failed to convert document: " + error.message);
+            console.error("转换错误：", error);
+            alert("文档转换失败：" + error.message);
         } finally {
             state.converting = false;
             elements.convertBtn.disabled = false;
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function getOutputFilename(originalName, newFormat) {
         const baseName = originalName.substring(0, originalName.lastIndexOf('.'));
-        return `${baseName}_converted.${newFormat}`;
+        return `${baseName}_已转换.${newFormat}`;
     }
 
     function downloadFile(blob, filename) {
