@@ -125,7 +125,8 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 
   function updateImageInfo(img) {
-    const dimensions = `${img.naturalWidth} × ${img.naturalHeight}px`;
+    // 核心修改：px → 像素
+    const dimensions = `${img.naturalWidth} × ${img.naturalHeight} 像素`;
     const dimensionsElement = elements.previewDiv.querySelector(".image-dimensions");
     if (dimensionsElement) {
       dimensionsElement.textContent = dimensions;
