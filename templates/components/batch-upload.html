@@ -1,5 +1,4 @@
 {{ define "batch-upload" }}
-<!-- 注意：这个模板是被 page-batch.html 引用的，所以 html lang 在主模板中设置即可 -->
 <div class="space-y-6">
     <div id="batchUploadArea" 
          class="relative border-2 border-dashed rounded-lg p-6 transition-colors"
@@ -37,12 +36,6 @@
                 <div class="max-h-60 overflow-y-auto space-y-2 rounded-lg p-4"
                      :class="{ 'bg-darkInput': darkMode, 'bg-gray-50': !darkMode }">
                     <!-- 文件项将插入到这里 -->
-                    <!-- 空状态提示 -->
-                    <div id="emptyFileList" class="text-center py-4 hidden">
-                        <p class="text-sm" :class="{ 'text-darkTextSecondary': darkMode, 'text-gray-500': !darkMode }">
-                            暂无文件
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -159,7 +152,8 @@
                             :class="{ 
                                 'bg-darkInput border-darkBorder text-darkTextPrimary hover:bg-darkInputHover hover:border-darkAccent focus:bg-darkInputFocus focus:border-darkAccent focus:ring-1 focus:ring-darkAccent': darkMode,
                                 'bg-white border-gray-300 hover:border-indigo-300 focus:ring-indigo-500 focus:border-indigo-500': !darkMode 
-                            }">
+                            }"
+                            title="选择输出格式">
                         <optgroup label="图片格式">
                             <option value="jpeg">JPEG - 适合照片</option>
                             <option value="png">PNG - 适合图形</option>
@@ -283,7 +277,8 @@
             :class="{ 
                 'text-darkTextPrimary bg-darkAccent hover:bg-darkAccentHover focus:ring-darkAccent': darkMode,
                 'text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500': !darkMode 
-            }">
+            }"
+            title="开始批量处理">
         <span x-text="processingMode === 'merge-pdf' ? '生成 PDF' : '处理图片'"></span>
     </button>
 
@@ -304,56 +299,6 @@
                 <div id="batchProgressBar" class="h-2 rounded-full transition-all duration-300" 
                      :class="{ 'bg-darkAccent': darkMode, 'bg-indigo-600': !darkMode }"
                      style="width: 0%">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 批量处理结果区域 -->
-    <div id="batchResult" class="hidden mt-6 rounded-lg shadow-lg overflow-hidden transition-colors"
-         :class="{ 'bg-darkSurface border border-darkBorder': darkMode, 'bg-white': !darkMode }">
-        <div class="px-4 py-3 sm:px-6 transition-colors"
-             :class="{ 
-                 'border-b border-darkBorder bg-darkInput': darkMode,
-                 'border-b border-gray-200 bg-gray-50': !darkMode 
-             }">
-            <h3 class="text-lg leading-6 font-medium transition-colors"
-                :class="{ 'text-darkTextPrimary': darkMode, 'text-gray-900': !darkMode }">
-                批量处理完成
-            </h3>
-        </div>
-        <div class="p-6 space-y-4">
-            <div class="flex justify-between items-center">
-                <div>
-                    <p class="text-sm" :class="{ 'text-darkTextSecondary': darkMode, 'text-gray-600': !darkMode }">
-                        共 <span id="totalFiles">0</span> 个文件，成功 <span id="successCount" class="text-green-600">0</span> 个，失败 <span id="failCount" class="text-red-600">0</span> 个
-                    </p>
-                </div>
-                <div class="flex space-x-3">
-                    <button id="retryFailedBtn" type="button" 
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm transition-colors"
-                            :class="{ 
-                                'text-darkTextPrimary bg-darkAccent hover:bg-darkAccentHover focus:ring-darkAccent': darkMode,
-                                'text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500': !darkMode 
-                            }"
-                            title="重试失败项">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                        重试失败项
-                    </button>
-                    <button id="downloadAllBtn" type="button" 
-                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm transition-colors"
-                            :class="{ 
-                                'text-darkTextPrimary bg-darkAccent hover:bg-darkAccentHover focus:ring-darkAccent': darkMode,
-                                'text-white bg-green-600 hover:bg-green-700 focus:ring-green-500': !darkMode 
-                            }"
-                            title="下载所有文件">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                        </svg>
-                        下载所有文件
-                    </button>
                 </div>
             </div>
         </div>
