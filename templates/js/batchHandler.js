@@ -24,10 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function setupBatchEventListeners() {
-        // 文件选择变化监听
         elements.batchImageInput.addEventListener("change", handleFileSelect);
 
-        // 拖拽事件监听
         elements.batchUploadArea.addEventListener("dragover", (e) => {
             e.preventDefault();
             elements.batchUploadArea.classList.add("border-indigo-500");
@@ -47,7 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // 处理按钮点击事件
         elements.batchProcessBtn.addEventListener("click", processBatch);
     }
 
