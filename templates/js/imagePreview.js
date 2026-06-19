@@ -106,7 +106,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 elements.uploadText.innerHTML = '<span class="text-green-500">HEIC 文件已准备处理</span>';
             }
             
-            // 强制将输出格式设置为非 HEIC
             if (elements.formatSelect) {
                 if (elements.formatSelect.value === "heic") {
                     elements.formatSelect.value = "jpeg";
@@ -137,23 +136,16 @@ document.addEventListener("DOMContentLoaded", function () {
       elements.uploadText.innerHTML = '<span class="text-green-500">文件已准备处理</span>';
     }
 
-    // 更新尺寸输入框的占位符
     if (elements.widthInput) elements.widthInput.placeholder = img.naturalWidth;
     if (elements.heightInput) elements.heightInput.placeholder = img.naturalHeight;
   }
 
   function resetForm() {
-    // 重置文件输入值
     elements.imageInput.value = "";
-    
-    // 隐藏预览和状态
     elements.previewDiv.classList.add("hidden");
     elements.fileStatus.classList.add("hidden");
-    
-    // 重置上传区域样式
     elements.uploadArea.classList.remove("border-green-500");
     
-    // 重置上传文本，不替换输入元素
     if (elements.uploadText) {
         elements.uploadText.innerHTML = `
             <label for="imageInput" class="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none">
@@ -168,11 +160,9 @@ document.addEventListener("DOMContentLoaded", function () {
         `;
     }
 
-    // 重置尺寸输入框的占位符
     if (elements.widthInput) elements.widthInput.placeholder = "宽度（像素）";
     if (elements.heightInput) elements.heightInput.placeholder = "高度（像素）";
     
-    // 重新初始化事件监听器
     setupEventListeners();
   }
 
